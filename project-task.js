@@ -1,3 +1,21 @@
+/*
+===========================================
+🛒 Higher-Order Functions: Product Utilities
+===========================================
+
+🎯 Objective:
+Students will create and work with higher-order functions to transform and manipulate data.
+
+They will:
+- Write higher-order functions that accept callbacks to apply transformations dynamically
+- Practice returning functions from higher-order functions for reusable, customizable utilities
+- Gain experience using `map`, `filter`, and `reduce` to perform practical data transformations
+*/
+
+// ============================================
+// 📦 Starting Dataset: Product List
+// ============================================
+
 const products = [
   { name: "Laptop", price: 1000, inStock: true },
   { name: "Phone", price: 500, inStock: false },
@@ -6,54 +24,134 @@ const products = [
   { name: "Keyboard", price: 100, inStock: false },
 ];
 
-function filterProducts(productsArray, callback) {
-  return productsArray.filter(callback);
+// ============================================
+// 🔧 Tasks
+// ============================================
+
+/*
+🔹 Task 1: Filter Products by Availability
+
+Create a function `filterProducts` that accepts:
+- an array of products
+- a callback function
+
+The callback should determine which products to include.
+Example: filter by availability or price threshold.
+
+Step-by-Step:
+1. Define the `filterProducts` function with appropriate parameters.
+2. Use the `filter()` method to apply the callback to the array.
+3. Return the filtered result.
+*/
+
+function filterProducts(products, callback) {
+
+  return products.filter(callback);
+
 }
 
-const inStockProducts = filterProducts(
-  products,
-  product => product.inStock
-);
+const inStockProducts = filterProducts(products, (item) => item.inStock);
 
-console.log("In Stock Products:");
-console.log(inStockProducts);
+console.log("\nIn Stock Products: ", inStockProducts);
 
-const expensiveProducts = filterProducts(
-  products,
-  product => product.price > 500
-);
+/*
+🔹 Task 2: Transform Product Names
 
-console.log("Products Above $500:");
-console.log(expensiveProducts);
+Use `map()` to create a new array of product names in UPPERCASE.
 
-const uppercaseNames = products.map(product =>
-  product.name.toUpperCase()
-);
+Step-by-Step:
+1. Use `map()` on the products array.
+2. Extract and transform the `name` property to uppercase.
+3. Store the result in a new variable.
+*/
 
-console.log("Uppercase Product Names:");
-console.log(uppercaseNames);
+const productsUppercase = products.map((product) => product.name.toUpperCase());
+
+console.log("\nUppercase Product Names: ", productsUppercase);
+
+//const productNamesUppercase = [];
+
+//for (let i = 0; i < products.length; i++) {
+
+  //productNamesUppercase.push(products[i].name.toUpperCase());
+
+//};
+
+/*
+🔹 Task 3: Generate Discounted Prices
+
+Write a higher-order function `applyDiscount` that:
+- Accepts a discount percentage as a whole number
+- Returns a function that takes in a product object and returns a discounted price
+
+Step-by-Step:
+1. Define a function `applyDiscount` with a parameter `discountPercent`.
+2. Return a new function that takes a product object.
+3. Use this returned function inside a `forEach()` call to add a new property, `salePrice`, to each product object.
+4. Print the array of products to verify the new property and value have been added to each product object.
+*/
 
 function applyDiscount(discountPercent) {
-  return function(price) {
-    return price - (price * discountPercent / 100);
-  };
-}
 
-const discount20 = applyDiscount(20);
+  return function(product) {
 
-const discountedProducts = products.map(product => {
-  return {
-    name: product.name,
-    discountedPrice: discount20(product.price)
-  };
+    return product.price - product.price * (discountPercent / 100)
+
+  }
+
+};
+
+const discount10 = applyDiscount(10); // 10% discount
+
+products.forEach((product) => {
+
+ product.salePrice = discount10(product);
+
 });
 
-console.log("Discounted Products:");
-console.log(discountedProducts);
+console.log("\nNew Products Array with Sale Prices: ", products);
 
-const totalInventoryValue = products
-  .filter(product => product.inStock)
+//function applyDiscount(discountPercent) {
+
+  //return function (price) {
+
+    //return price - price * (discountPercent / 100);
+
+  //};  
+
+//};
+
+//const discount10 = applyDiscount(10); // 10% discount
+
+//products.forEach((product) => {
+
+  product.salePrice = discount10(product.price); // pass just the price
+
+//});
+
+//console.log("\nNew Products Array with Sale Prices: ", products);
+/*
+🔹 Task 4: Calculate Total Inventory Value
+
+Use `reduce()` to calculate the total value of products that are currently in stock.
+
+Step-by-Step:
+1. Use the `reduce()` method on the products array.
+2. Add only the prices of products where `inStock` is true.
+3. Store the total in a new variable.
+*/
+const totalValue = products
+
+  .filter((product) => product.inStock)
+
   .reduce((total, product) => total + product.price, 0);
 
-console.log("Total Inventory Value:");
-console.log(totalInventoryValue);
+  console.log("\nTotal Inventory Value: ", totalValue);
+// ============================================
+// 🧪 Console Test Your Work
+// ============================================
+
+// console.log("Filtered products:", ...);
+// console.log("Uppercased names:", ...);
+// console.log("Discounted products:", ...);
+// console.log("Total value in stock:", ...);
